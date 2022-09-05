@@ -1,4 +1,5 @@
-import useEventSource from "../hooks/useEventSource";
+import { useEffect } from 'react'
+import useEventSource from "../hooks/useEventSource"
 
 /*
   Lobby is the page that is shown when the user has been authenticated, allowed
@@ -30,6 +31,18 @@ import useEventSource from "../hooks/useEventSource";
 */
 function Lobby() {
   const [es, status] = useEventSource("http://localhost:8080/lobby")
+  
+  useEffect(() => {
+    if (es.current == null) {
+      return
+    }
+    const listen = (ev: MessageEvent<any>) => console.log(ev.data)
+    const cleanup = () => es.current?.removeEventListener('message', listen)
+    
+    es.current.addEventListener('message', listen)
+    return cleanup
+  }, [es])
+  
   return <div>Lobby</div>
 }
 
