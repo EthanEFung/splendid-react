@@ -1,6 +1,6 @@
 # Splendid
 
-This is a personal project, to build a game inspired by but not affiliated with Marcc Andre's Splendor. Take with a grain of salt (given that I am a solo developer) that the code is experimental, so use / develop with discretion.
+This is a personal project, to build a game inspired by but not affiliated with Marc Andre's Splendor. Take with a grain of salt (given that I am a solo developer) that the code is experimental, so use / develop with discretion.
 
 My end goal is to learn a little more about Golang, and focus on backend work. However, there needs to be a nice interface that can be shown to non-technical people, and so having a client for my backend is necessary. Building a web application imo is the obvious choice.
 
@@ -8,7 +8,6 @@ I've chosen React over much better and simpler javascript frameworks because it 
 
 # Todos and Outstanding Issues that need to be solved
 
-- set up tailwind configuration
 - set up react query
 - Setting up authentication: this is necessary given the application will be hosted on the internet, and as much as we can, we want to have means for two sessions to interact in a single game.
 - How do we communicate to the client what connections are in game
