@@ -1,5 +1,48 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom';
 import useEventSource from "../hooks/useEventSource"
+
+type CardProps = {
+  name: string;
+  list: string[];
+}
+
+type RoomData = {
+  name: string;
+  occupants: string[];
+}
+
+type LobbyData = {
+  [name: string]: RoomData 
+}
+
+/**
+ * TODO: maybe consider using zod
+ */
+function isLobbyData(data: any): data is LobbyData {
+  if (typeof data !== 'object' || data === null) {
+    return false
+  }
+  for (const key in data) {
+    if (!data.hasOwnProperty(key)) {
+      continue
+    }
+    const name = data[key]?.name
+    if (name !== key) {
+      return false
+    }
+  }
+  return true
+}
+
+function Card({name, list}: CardProps) {
+  return <div>
+    <h2>{name}</h2>
+    <div>
+      {list.map((item, i) => <div key={i}>{item}</div>)}
+    </div>
+  </div>
+}
 
 /*
   Lobby is the page that is shown when the user has been authenticated, allowed
@@ -31,19 +74,33 @@ import useEventSource from "../hooks/useEventSource"
 */
 function Lobby() {
   const [es, status] = useEventSource("http://localhost:8080/lobby")
+  const [rooms, setRooms] = useState<RoomData[]>([])
   
   useEffect(() => {
     if (es.current == null) {
       return
     }
-    const listen = (ev: MessageEvent<any>) => console.log(ev.data)
+    const listen = (ev: MessageEvent<any>) => {
+      const json = JSON.parse(ev.data)
+      if (!isLobbyData(json)) {
+        return
+      }
+      const curr = Object.values(json)
+      setRooms(curr)
+      console.log(ev.data)
+    }
     const cleanup = () => es.current?.removeEventListener('message', listen)
     
     es.current.addEventListener('message', listen)
     return cleanup
-  }, [es])
+  }, [es, setRooms])
+
   
-  return <div>Lobby</div>
+  return <div>
+    <h1>Lobby</h1>
+    <Link to="/create">Create A Room +</Link>
+    <div>{rooms.map((room) => <Card key={room.name} name={room.name} list={room.occupants} />)}</div>
+  </div>
 }
 
 export default Lobby;

@@ -5,7 +5,7 @@ class MockAuthenticationService {
     this.id = 1;
   }
   get authenticated() {
-    return false
+    return true
   }
   get authorized() {
     return typeof this.id === 'number'
