@@ -8,10 +8,6 @@ import NotFound from "./components/NotFound";
 import Create from "./components/Create";
 
 const fetcher = async () => {};
-/**
- * TODO:
- * - work on the create form.
- */
 
 function App() {
   const auth = useAuth(fetcher);
