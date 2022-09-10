@@ -9,7 +9,13 @@ function useEventSource(url: string, Source = EventSource) {
       return
     }
 
-    const es = new Source(url)
+    /**
+     * presummably when connecting with the server, we'll
+     * need a cookie to authenticate the user. Asking for 
+     * private credentials here is a hack until we have a
+     * proper authentication workflow setup.
+     */
+    const es = new Source(url, { withCredentials: true })
     source.current = es;
 
     es.onopen = () => setStatus("open")

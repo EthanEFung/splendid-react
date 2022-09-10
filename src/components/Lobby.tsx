@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom';
 import useEventSource from "../hooks/useEventSource"
+import List from '../components/List';
 
 type CardProps = {
   name: string;
@@ -9,7 +10,7 @@ type CardProps = {
 
 type RoomData = {
   name: string;
-  occupants: string[];
+  occupants: { [occ: string]: {} };
 }
 
 type LobbyData = {
@@ -95,11 +96,15 @@ function Lobby() {
     return cleanup
   }, [es, setRooms])
 
-  
   return <div>
-    <h1>Lobby</h1>
-    <Link to="/create">Create A Room +</Link>
-    <div>{rooms.map((room) => <Card key={room.name} name={room.name} list={room.occupants} />)}</div>
+    <h1 className="text-xl">Lobby</h1>
+    <Link to="/create" className="border rounded cursor-pointer p-2 inline-block">Create a room +</Link>
+    <h2 className="text-lg">Rooms</h2>
+    <List
+      list={rooms}
+      none={(<div>There are no rooms in the lobby</div>)}
+      render={(room) => <Card key={room.name} name={room.name} list={Object.keys(room.occupants)} />}
+    />
   </div>
 }
 
