@@ -1,48 +1,52 @@
-import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom';
-import useEventSource from "../hooks/useEventSource"
-import List from '../components/List';
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import useEventSource from "../hooks/useEventSource";
+import List from "../components/List";
 
 type CardProps = {
   name: string;
   list: string[];
-}
+};
 
 type RoomData = {
   name: string;
   occupants: { [occ: string]: {} };
-}
+};
 
 type LobbyData = {
-  [name: string]: RoomData 
-}
+  [name: string]: RoomData;
+};
 
 /**
  * TODO: maybe consider using zod
  */
 function isLobbyData(data: any): data is LobbyData {
-  if (typeof data !== 'object' || data === null) {
-    return false
+  if (typeof data !== "object" || data === null) {
+    return false;
   }
   for (const key in data) {
     if (!data.hasOwnProperty(key)) {
-      continue
+      continue;
     }
-    const name = data[key]?.name
+    const name = data[key]?.name;
     if (name !== key) {
-      return false
+      return false;
     }
   }
-  return true
+  return true;
 }
 
-function Card({name, list}: CardProps) {
-  return <div>
-    <h2>{name}</h2>
+function Card({ name, list }: CardProps) {
+  return (
     <div>
-      {list.map((item, i) => <div key={i}>{item}</div>)}
+      <h2>{name}</h2>
+      <div>
+        {list.map((item, i) => (
+          <div key={i}>{item}</div>
+        ))}
+      </div>
     </div>
-  </div>
+  );
 }
 
 /*
@@ -74,38 +78,51 @@ function Card({name, list}: CardProps) {
   LOBBY -> Join Room -> HTTP GET -> Server
 */
 function Lobby() {
-  const [es, status] = useEventSource("http://localhost:8080/lobby")
-  const [rooms, setRooms] = useState<RoomData[]>([])
-  
+  const [es, status] = useEventSource("http://localhost:8080/lobby");
+  const [rooms, setRooms] = useState<RoomData[]>([]);
+
   useEffect(() => {
     if (es.current == null) {
-      return
+      return;
     }
     const listen = (ev: MessageEvent<any>) => {
-      const json = JSON.parse(ev.data)
+      const json = JSON.parse(ev.data);
       if (!isLobbyData(json)) {
-        return
+        return;
       }
-      const curr = Object.values(json)
-      setRooms(curr)
-      console.log(ev.data)
-    }
-    const cleanup = () => es.current?.removeEventListener('message', listen)
-    
-    es.current.addEventListener('message', listen)
-    return cleanup
-  }, [es, setRooms])
+      const curr = Object.values(json);
+      setRooms(curr);
+      console.log(ev.data);
+    };
+    const cleanup = () => es.current?.removeEventListener("message", listen);
 
-  return <div>
-    <h1 className="text-xl">Lobby</h1>
-    <Link to="/create" className="border rounded cursor-pointer p-2 inline-block">Create a room +</Link>
-    <h2 className="text-lg">Rooms</h2>
-    <List
-      list={rooms}
-      none={(<div>There are no rooms in the lobby</div>)}
-      render={(room) => <Card key={room.name} name={room.name} list={Object.keys(room.occupants)} />}
-    />
-  </div>
+    es.current.addEventListener("message", listen);
+    return cleanup;
+  }, [es, setRooms]);
+
+  return (
+    <div>
+      <h1 className="text-xl">Lobby</h1>
+      <Link
+        to="/create"
+        className="border rounded cursor-pointer p-2 inline-block"
+      >
+        Create a room +
+      </Link>
+      <h2 className="text-lg">Rooms</h2>
+      <List
+        list={rooms}
+        none={<div>There are no rooms in the lobby</div>}
+        render={(room) => (
+          <Card
+            key={room.name}
+            name={room.name}
+            list={Object.keys(room.occupants)}
+          />
+        )}
+      />
+    </div>
+  );
 }
 
 export default Lobby;

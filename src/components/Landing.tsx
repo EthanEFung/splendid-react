@@ -1,6 +1,5 @@
-
 function Landing() {
-  return <div className="font-bold">landing</div>
+  return <div className="font-bold">landing</div>;
 }
 
 export default Landing;

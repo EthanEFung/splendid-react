@@ -22,6 +22,7 @@ I've chosen React over much better and simpler javascript frameworks because it 
 # Local development
 
 Assuming that you have recent version of node (16^) and npm, from the terminal run:
+
 ```bash
 npm run dev
 ```

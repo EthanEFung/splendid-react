@@ -1,15 +1,14 @@
-
 type Props<T extends unknown> = {
-  list: T[],
-  none: React.ReactElement,
-  render: (item: T, index: number, list: T[]) => React.ReactElement
-}
+  list: T[];
+  none: React.ReactElement;
+  render: (item: T, index: number, list: T[]) => React.ReactElement;
+};
 
-function List<T extends unknown>({list, none, render}: Props<T>) {
+function List<T extends unknown>({ list, none, render }: Props<T>) {
   if (list.length === 0) {
-    return none
+    return none;
   }
-  return <>{list.map(render)}</>
+  return <>{list.map(render)}</>;
 }
 
-export default List
+export default List;
