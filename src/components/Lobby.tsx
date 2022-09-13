@@ -5,11 +5,13 @@ import useEventSource from "../hooks/useEventSource";
 import List from "../components/List";
 
 type CardProps = {
+  id: string
   name: string;
   list: string[];
 };
 
 type RoomData = {
+  id: string;
   name: string;
   occupants: { [occ: string]: {} };
 };
@@ -29,24 +31,27 @@ function isLobbyData(data: any): data is LobbyData {
     if (!data.hasOwnProperty(key)) {
       continue;
     }
-    const name = data[key]?.name;
-    if (name !== key) {
+    const id = data[key]?.id;
+    if ('name' in data && 'id' in data) {
+      continue
+    }
+    if (id !== key) {
       return false;
     }
   }
   return true;
 }
 
-function Card({ name, list }: CardProps) {
+function Card({ id, name, list }: CardProps) {
   return (
-    <div>
+    <Link to={id}>
       <h2>{name}</h2>
       <div>
         {list.map((item, i) => (
           <div key={i}>{item}</div>
         ))}
       </div>
-    </div>
+    </Link>
   );
 }
 
@@ -116,7 +121,8 @@ function Lobby() {
         none={<div>There are no rooms in the lobby</div>}
         render={(room) => (
           <Card
-            key={room.name}
+            key={room.id}
+            id={room.id}
             name={room.name}
             list={Object.keys(room.occupants)}
           />
