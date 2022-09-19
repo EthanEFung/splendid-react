@@ -5,7 +5,7 @@ import useEventSource from "../hooks/useEventSource";
 import List from "../components/List";
 
 type CardProps = {
-  id: string
+  id: string;
   name: string;
   list: string[];
 };
@@ -32,8 +32,8 @@ function isLobbyData(data: any): data is LobbyData {
       continue;
     }
     const id = data[key]?.id;
-    if ('name' in data && 'id' in data) {
-      continue
+    if ("name" in data && "id" in data) {
+      continue;
     }
     if (id !== key) {
       return false;
