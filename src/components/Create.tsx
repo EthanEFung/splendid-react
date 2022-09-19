@@ -6,7 +6,10 @@ function Create() {
   const { register, handleSubmit } = useForm();
   const navigate = useNavigate();
   const post = useCreate(
-    (res) => res.ok && navigate("..", { replace: true }),
+    async (res) => {
+      const id = await res.text()
+      navigate("../" + id, { replace: true })
+    },
     console.error
   );
   const create = handleSubmit(post);

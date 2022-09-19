@@ -1,5 +1,5 @@
-import { flowRight } from "lodash";
 import { useEffect, useState } from "react";
+import flowRight from "lodash/flowRight";
 import { useParams } from "react-router-dom";
 import useEventSource from "../hooks/useEventSource";
 
