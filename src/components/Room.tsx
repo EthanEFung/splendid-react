@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import flowRight from "lodash/flowRight";
 import { useParams } from "react-router-dom";
 import useEventSource from "../hooks/useEventSource";
+import start from "../api/start";
 
 const isRoomData = (_: unknown) => true;
 const parse = (ev: MessageEvent<any>) => JSON.parse(ev.data);
@@ -24,7 +25,14 @@ function Room() {
     return cleanup;
   }, [es, status]);
 
-  return <div>{JSON.stringify(data, null, 2)}</div>;
+  return (
+    <div>
+      {JSON.stringify(data, null, 2)}
+      <button type="button" onClick={() => start(data.id)}>
+        start
+      </button>
+    </div>
+  );
 }
 
 export default Room;

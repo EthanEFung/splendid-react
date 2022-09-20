@@ -5,13 +5,10 @@ import useCreate from "../hooks/useCreate";
 function Create() {
   const { register, handleSubmit } = useForm();
   const navigate = useNavigate();
-  const post = useCreate(
-    async (res) => {
-      const id = await res.text()
-      navigate("../" + id, { replace: true })
-    },
-    console.error
-  );
+  const post = useCreate(async (res) => {
+    const id = await res.text();
+    navigate("../" + id, { replace: true });
+  }, console.error);
   const create = handleSubmit(post);
 
   return (
